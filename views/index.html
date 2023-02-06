@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <section>
+      <h1>COM3</h1>
+      <button id="btn-open-port">Open</button>
+      <button id="btn-close-port">Close</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Sensor Type</th>
+            <th>Suhu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="data-rows">
+
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <script>
+      const yourRequest = async (url, settings) => {
+        try {
+          const response = await fetch(url, settings);
+
+          if (response.ok) {
+            const data = await response.json();
+            return [data, null];
+          }
+
+          const error = await response.json();
+          return [null, error];
+        } catch (error) {
+          return [null, error];
+        }
+      };
+
+      const reqPort = async (action) => {
+        const settings = {
+            method: 'GET',
+            mode: 'no-cors',
+            headers: {
+                 "Content-Type": "application/json"
+            },
+        }
+
+        const [data, error] = await yourRequest('http://localhost:3000/'+action, settings)
+
+        console.log(data, error);
+      }
+
+      const reqData = async (action) => {
+        const settings = {
+            method: 'GET',
+            mode: 'no-cors',
+            headers: {
+                 "Accept": "application/json"
+            },
+        }
+
+        // fetch(url)
+        // .then(res => res.json())
+        // .then((data) => {
+        //   console.log(data);
+        // })
+        // .catch(err => { throw err });
+
+        const [data, error] = await yourRequest('http://localhost:3000/get', settings)
+
+        console.log(data, error);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        console.log("Hello World!");
+
+        document.getElementById('btn-open-port').addEventListener('click', (event) => {
+          reqPort('open')
+        })
+        document.getElementById('btn-close-port').addEventListener('click', (event) => {
+          reqPort('close')
+        })
+
+        reqData()
+      });
+    </script>
+  </body>
+</html>
