@@ -1,0 +1,4 @@
+# node-micro-controller
+
+npm install serialport
+npm install pg
